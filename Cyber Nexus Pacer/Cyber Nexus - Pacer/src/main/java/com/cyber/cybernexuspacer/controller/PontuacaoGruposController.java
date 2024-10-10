@@ -1,4 +1,4 @@
-package com.cyber.cybernexuspacer;
+package com.cyber.cybernexuspacer.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -7,8 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-
-import java.io.IOException;
 
 public class PontuacaoGruposController {
 

@@ -5,4 +5,6 @@ module com.cyber.cybernexuspacer {
 
     opens com.cyber.cybernexuspacer to javafx.fxml;
     exports com.cyber.cybernexuspacer;
+    exports com.cyber.cybernexuspacer.controller;
+    opens com.cyber.cybernexuspacer.controller to javafx.fxml;
 }

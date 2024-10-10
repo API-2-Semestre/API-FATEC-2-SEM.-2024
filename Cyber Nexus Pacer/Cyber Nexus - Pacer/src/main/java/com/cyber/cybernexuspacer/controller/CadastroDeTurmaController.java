@@ -1,4 +1,4 @@
-package com.cyber.cybernexuspacer;
+package com.cyber.cybernexuspacer.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

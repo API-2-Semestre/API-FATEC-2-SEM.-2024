@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorlogin" prefHeight="612.0" prefWidth="817.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cyber.cybernexuspacer.LoginController">
+<AnchorPane fx:id="anchorlogin" prefHeight="612.0" prefWidth="817.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cyber.cybernexuspacer.controller.LoginController">
     <!-- Label Sistema PACER -->
     <Label fx:id="lblTxtSistemaPacer" contentDisplay="CENTER" layoutX="196.0" layoutY="26.0" prefHeight="70.0" prefWidth="295.0" text="SISTEMA PACER">
         <font>
