@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -31,16 +32,62 @@
                         </ImageView>
                     </children>
                 </HBox>
-                <ScrollPane layoutX="8.0" layoutY="110.0" prefHeight="384.0" prefWidth="262.0">
-                    <content>
-                        <VBox fx:id="criteriaContainer1" minHeight="0.0" minWidth="0.0" prefHeight="211.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                    </content>
-                </ScrollPane>
             <Button fx:id="btnAcompSprint" layoutX="204.0" layoutY="546.0" mnemonicParsing="false" onAction="#handleAcompSprint" prefHeight="32.0" prefWidth="125.0" style="-fx-background-color: #86B6DD;" text="Acomp. Sprints" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
+                <ScrollPane layoutX="14.0" layoutY="108.0" prefHeight="384.0" prefWidth="262.0">
+                    <content>
+                        <VBox fx:id="criteriaContainer1" minHeight="0.0" minWidth="0.0" prefHeight="382.0" prefWidth="263.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <Pane fx:id="PaneSprintZero" prefHeight="100.0" prefWidth="0.0" style="-fx-background-color: #86B6DD;">
+                           <children>
+                              <DatePicker fx:id="DataInicio" layoutX="148.0" layoutY="26.0" prefHeight="10.0" prefWidth="98.0" />
+                              <Label fx:id="LblTxtSprintUm" layoutX="14.0" layoutY="10.0" prefHeight="17.0" prefWidth="75.0" text="SPRINT 01" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="LblTxtInicio" layoutX="89.0" layoutY="26.0" prefHeight="25.0" prefWidth="53.0" text="INICIO:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <DatePicker fx:id="DataFim" layoutX="148.0" layoutY="61.0" prefHeight="10.0" prefWidth="98.0" />
+                              <Label fx:id="LblTxtFim" layoutX="89.0" layoutY="61.0" prefHeight="25.0" prefWidth="53.0" text="FIM:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Pane fx:id="PaneSprintUm" prefHeight="100.0" prefWidth="198.0" style="-fx-background-color: #86B6DD;" visible="false">
+                           <children>
+                              <DatePicker fx:id="DataInicio1" layoutX="148.0" layoutY="26.0" prefHeight="10.0" prefWidth="98.0" />
+                              <Label fx:id="LblTxtSprintUm1" layoutX="14.0" layoutY="10.0" prefHeight="17.0" prefWidth="75.0" text="SPRINT 02" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="LblTxtInicio1" layoutX="89.0" layoutY="26.0" prefHeight="25.0" prefWidth="53.0" text="INICIO:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <DatePicker fx:id="DataFim1" layoutX="148.0" layoutY="61.0" prefHeight="10.0" prefWidth="98.0" />
+                              <Label fx:id="LblTxtFim1" layoutX="89.0" layoutY="61.0" prefHeight="25.0" prefWidth="53.0" text="FIM:" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="BtnDeleteSprint" layoutX="35.0" layoutY="48.0" mnemonicParsing="false" onAction="#botaoDeleteSprint02" prefHeight="26.0" prefWidth="34.0" text="x" />
+                           </children>
+                        </Pane>
+                     </children>
+                  </VBox>
+                    </content>
+                </ScrollPane>
             </children>
         </Pane>
         <!-- VBox para o botão Adicionar Sprint e as Sprints -->
@@ -53,23 +100,24 @@
                     </font>
                 </Button>
 
-                <!-- VBox para exibir as Sprints -->
+                                  <!-- VBox para exibir as Sprints -->
                 <VBox fx:id="sprintContainer" spacing="10.0">
                     <!-- As caixinhas de entrada de data serão adicionadas aqui -->
                 </VBox>
             </children>
         </VBox>
 
-
-        <!-- Caixa de entrada do Critério -->
-        <AnchorPane prefHeight="138.0" prefWidth="309.0" AnchorPane.leftAnchor="130.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="110.0">
+                                    
+                                            <!-- Caixa de entrada do Critério -->
+        <AnchorPane layoutX="280.0" layoutY="111.2" prefHeight="138.0" prefWidth="470.0" AnchorPane.leftAnchor="280.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="111.0">
             <children>
-                <TextField fx:id="tituloCritério" layoutX="28.0" prefHeight="25.0" prefWidth="402.0" promptText="Título do Critério" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" />
-                <TextField fx:id="descricaoCritério" alignment="TOP_LEFT" layoutX="28.0" layoutY="35.0" prefHeight="78.0" promptText="Descrição do critério." AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="112.0" />
+                <TextField fx:id="tituloCriterio" prefHeight="26.0" prefWidth="470.0" promptText="Título do Critério" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                <TextField fx:id="descricaoCriterio" alignment="TOP_LEFT" layoutX="-0.8" layoutY="35.0" prefHeight="78.0" prefWidth="359.0" promptText="Descrição do critério." AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="112.0" />
                 <Button layoutX="508.0" layoutY="35.0" onAction="#handleAdicionarCriterio" prefHeight="78.0" prefWidth="111.0" style="-fx-background-color: #369C06;" text="ADICIONAR CRITÉRIO" textAlignment="CENTER" textFill="WHITE" wrapText="true" AnchorPane.rightAnchor="1.0">
                     <font>
                         <Font name="System Bold" size="12.0" />
-                    </font></Button>
+                    </font>
+            </Button>
             </children>
         </AnchorPane>
 
