@@ -51,10 +51,10 @@ public class CriteriosController {
     private int sprintCount = 0; // Contador para o número de sprints
 
     @FXML
-    private TextField tituloCritério; // TextField para o título do critério
+    private TextField tituloCriterio; // TextField para o título do critério
 
     @FXML
-    private TextField descricaoCritério; // TextField para a descrição do critério
+    private TextField descricaoCriterio; // TextField para a descrição do critério
 
     private int criterioIdCounter = 1; // Contador de ID fictício para os critérios (para fins de exemplo)
 
@@ -65,8 +65,8 @@ public class CriteriosController {
 
     @FXML
     private void handleAdicionarCriterio() {
-        String titulo = tituloCritério.getText();
-        String descricao = descricaoCritério.getText();
+        String titulo = tituloCriterio.getText();
+        String descricao = descricaoCriterio.getText();
 
         // Caso campo vazio
         if (titulo.isEmpty() || descricao.isEmpty()) {
@@ -113,8 +113,8 @@ public class CriteriosController {
         campo_criterios.getChildren().add(novoCriterio);
 
         // Limpa os campos de texto para adicionar novos critérios
-        tituloCritério.clear();
-        descricaoCritério.clear();
+        tituloCriterio.clear();
+        descricaoCriterio.clear();
     }
 
     @FXML
