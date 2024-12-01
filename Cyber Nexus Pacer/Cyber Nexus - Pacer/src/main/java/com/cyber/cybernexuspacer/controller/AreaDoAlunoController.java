@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 public class AreaDoAlunoController {
-    @FXML
-    private Label welcomeText;
 
     @FXML
     private Label lblNomeGrupo;
@@ -33,46 +31,7 @@ public class AreaDoAlunoController {
     private Text lblNotaGrupo;
 
     @FXML
-    private Pane alunoSprintsBox;
-
-    @FXML
-    private Pane alunosSprintsBtns;
-
-    @FXML
-    private AnchorPane areaAlunoContainer;
-
-    @FXML
-    private Pane areaAlunoTitulo;
-
-    @FXML
-    private Button btnConfirmaCriterios;
-
-    @FXML
-    private Button btnSairNotas;
-
-    @FXML
     private AnchorPane campo_criterios;
-
-    @FXML
-    private Button btnSprint1;
-
-    @FXML
-    private Button btnSprint2;
-
-    @FXML
-    private Button btnSprint3;
-
-    @FXML
-    private Button btnSprint4;
-
-    @FXML
-    private Pane cabecalhoCyber;
-
-    @FXML
-    private ScrollPane criteriosNotas;
-
-    @FXML
-    private Pane grupoAlunoInfo;
 
     @FXML
     private VBox vBoxSprintsBtns;
@@ -100,12 +59,31 @@ public class AreaDoAlunoController {
     @FXML
     private void onClickbtnConfirmaNota(ActionEvent event) throws SQLException {
 
+
         // Obtenha o ID do avaliador e do avaliado, assim como o número do sprint
         String nomeReceptor = alunosComboBox.getValue();  // Nome do aluno selecionado no ComboBox
         Integer idReceptor = alunosMap.get(nomeReceptor); // O ID correspondente ao nome do aluno selecionado
 
         AreaDoAluno alunoLogado = AlunoSession.getAlunoLogado();
         int idAvaliador = alunoLogado.getIdAlunoAvaliador(); // Agora pegamos o ID do aluno logado
+
+        // Consultar a nota disponível para o grupo
+        AreaDoAlunoDao areaDoAlunoDao = new AreaDoAlunoDao();
+        double notaDisponivel = areaDoAlunoDao.buscaNota();  // Pega a nota disponível do banco
+
+        // Calcular a soma das notas atribuídas
+        int somaNotas = criteriosSelecionados.values().stream().mapToInt(Integer::intValue).sum();
+
+        // Verificar se a soma das notas é válida
+        if (somaNotas > notaDisponivel) {
+            // Se a soma das notas for maior que a nota disponível
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Aviso");
+            alert.setHeaderText(null);
+            alert.setContentText("A soma das notas atribuídas é maior do que as notas disponíveis para distribuir.");
+            alert.showAndWait();
+            return;  // Não continua com a confirmação
+        }
 
 
         // Para cada critério, verifica qual foi a nota atribuída
@@ -114,13 +92,11 @@ public class AreaDoAlunoController {
             int nota = entry.getValue();
 
             // Agora você pode salvar a nota no banco de dados chamando o método no DAO
-            AreaDoAlunoDao areaDoAlunoDao = new AreaDoAlunoDao();
+            //AreaDoAlunoDao areaDoAlunoDao = new AreaDoAlunoDao();
             areaDoAlunoDao.salvarNota(idAvaliador, idReceptor, nota, tituloCriterio); // Salva a nota na tabela NOTAS
 
-
-
-
         }
+
         exibirNota();
         // Exibe uma mensagem para o usuário
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -147,19 +123,20 @@ public class AreaDoAlunoController {
 
         // Cria um botão para cada sprint
         for (Sprint sprint : sprints) {
-            Button sprintButton = new Button("Sprint " + sprint.getNumSprint());
-            sprintButton.setPrefSize(188, 40);
-            sprintButton.setLayoutX(6);
-            sprintButton.setLayoutY(7);
-            sprintButton.setStyle("-fx-background-color: #86B6DD; -fx-font-weight: bolder; -fx-padding: 10 20 10 20;");
-            sprintButton.setOnAction(event -> {
-                // Ação quando a sprint for clicada
-                System.out.println("Sprint " + sprint.getNumSprint() + " selecionada.");
-                // Você pode adicionar a lógica para lidar com o clique na sprint
-            });
-            vBoxSprintsBtns.getChildren().add(sprintButton);  // Adiciona o botão à interface
+            if (sprint.getLiberado() == 1) {
+                Button sprintButton = new Button("Sprint " + sprint.getNumSprint());
+                sprintButton.setPrefSize(188, 40);
+                sprintButton.setLayoutX(6);
+                sprintButton.setLayoutY(7);
+                sprintButton.setStyle("-fx-background-color: #86B6DD; -fx-font-weight: bolder; -fx-padding: 10 20 10 20;");
+                sprintButton.setOnAction(event -> {
+                    // Ação quando a sprint for clicada
+                    System.out.println("Sprint " + sprint.getNumSprint() + " selecionada.");
+                    // Você pode adicionar a lógica para lidar com o clique na sprint
+                });
+                vBoxSprintsBtns.getChildren().add(sprintButton);  // Adiciona o botão à interface
+            }
         }
-
     }
 
 
@@ -231,21 +208,26 @@ public class AreaDoAlunoController {
         descricaoLabel.setWrapText(true);  // Permite quebra de linha
         descricaoLabel.setStyle("-fx-text-fill: black; -fx-font-size: 12px; -fx-font-family: 'Arial';");
 
-        CheckBox checkboxZero = criaCheckbox("0",355,10);
-        CheckBox checkboxUm = criaCheckbox("1",385,10);
-        CheckBox checkboxDois = criaCheckbox("2",415,10);
-        CheckBox checkboxTres = criaCheckbox("3",445,10);
+        // Criando o ToggleGroup
+        ToggleGroup toggleGroup = new ToggleGroup();
 
-        checkboxes.add(checkboxZero);
-        checkboxes.add(checkboxUm);
-        checkboxes.add(checkboxDois);
-        checkboxes.add(checkboxTres);
+        RadioButton radioZero = criaRadioButton(350,10);
+        radioZero.setToggleGroup(toggleGroup);
 
-        // Associando a lógica de clique de cada checkbox ao critério
-        checkboxZero.setOnAction(e -> salvarNotaCriterio(titulo, 0));
-        checkboxUm.setOnAction(e -> salvarNotaCriterio(titulo, 1));
-        checkboxDois.setOnAction(e -> salvarNotaCriterio(titulo, 2));
-        checkboxTres.setOnAction(e -> salvarNotaCriterio(titulo, 3));
+        RadioButton radioUm = criaRadioButton(380,10);
+        radioUm.setToggleGroup(toggleGroup);
+
+        RadioButton radioDois = criaRadioButton(410,10);
+        radioDois.setToggleGroup(toggleGroup);
+
+        RadioButton radioTres = criaRadioButton(440,10);
+        radioTres.setToggleGroup(toggleGroup);
+
+        // Associando as ações aos RadioButtons
+        radioZero.setOnAction(e -> salvarNotaCriterio(titulo, 0));
+        radioUm.setOnAction(e -> salvarNotaCriterio(titulo, 1));
+        radioDois.setOnAction(e -> salvarNotaCriterio(titulo, 2));
+        radioTres.setOnAction(e -> salvarNotaCriterio(titulo, 3));
 
         Label lblNotaZero = criaLabel(355,33,"0");
         Label lblNotaUm = criaLabel(385,33,"1");
@@ -254,7 +236,7 @@ public class AreaDoAlunoController {
 
         paneCriterio.getChildren().addAll(
                 tituloLabel, descricaoLabel,
-                checkboxZero,checkboxUm,checkboxDois,checkboxTres,
+                radioZero,radioUm,radioDois,radioTres,
                 lblNotaZero ,lblNotaUm, lblNotaDois, lblNotaTres
 
         );
@@ -270,6 +252,7 @@ public class AreaDoAlunoController {
 
         // Adiciona o novo critério ao AnchorPane (campo_criterios)
         campo_criterios.getChildren().add(paneCriterio);
+        campo_criterios.setPrefHeight(novaPosicaoY);
     }
 
     private void carregarCriterios() throws SQLException {
@@ -282,11 +265,11 @@ public class AreaDoAlunoController {
     }
 
 
-    private CheckBox criaCheckbox(String nome, double layoutX, double layoutY) {
-        CheckBox checkBox = new CheckBox(nome);
-        checkBox.setLayoutX(layoutX);
-        checkBox.setLayoutY(layoutY);
-        return checkBox;
+    private RadioButton criaRadioButton(double layoutX, double layoutY) {
+        RadioButton radioButton = new RadioButton();
+        radioButton.setLayoutX(layoutX);
+        radioButton.setLayoutY(layoutY);
+        return radioButton;
     }
 
     private Label criaLabel(double layoutX, double layoutY, String descricao) {
@@ -301,5 +284,6 @@ public class AreaDoAlunoController {
     void onClickbtnSair(ActionEvent event) throws IOException {
         Main.setRoot("login-view");
     }
+
 
 }

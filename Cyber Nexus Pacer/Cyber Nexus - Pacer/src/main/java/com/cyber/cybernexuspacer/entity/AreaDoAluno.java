@@ -10,6 +10,9 @@ public class AreaDoAluno {
     private String email;
     private String tipo_usuario;
     private String grupo;
+    private double nota;
+
+    public AreaDoAluno() {}
 
     public AreaDoAluno(int idAluno, String nome, String email, String grupo, String senha, String tipo_usuario) {
         this.idAluno = idAluno;
@@ -34,8 +37,11 @@ public class AreaDoAluno {
     public String getGrupo() { return grupo; }
     public String getSenha() { return senha; }
     public String getTipo_usuario() { return tipo_usuario; }
+    public double getNota() {
+        return nota;
+    }
 
-    public void setIdAlunoReceptor(int idAlunoReceptor) {
+        public void setIdAlunoReceptor(int idAlunoReceptor) {
         this.idAlunoReceptor = idAlunoReceptor;
     }
     public void setIdAlunoAvaliador(int idAlunoAvaliador) {
@@ -56,5 +62,9 @@ public class AreaDoAluno {
     public void setGrupo(String grupo) {
         this.grupo = grupo;
     }
+    public void setNota(double nota) {
+        this.nota = nota;
+    }
+
 
 }

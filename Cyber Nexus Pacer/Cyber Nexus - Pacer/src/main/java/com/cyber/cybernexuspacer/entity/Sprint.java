@@ -8,6 +8,7 @@ public class Sprint {
     private Date dataInicio;
     private Date dataFim;
     private boolean markedForDeletion;
+    private int liberado;
 
     // Construtores, getters e setters
     public Sprint(int id, int numSprint, Date dataInicio, Date dataFim) {
@@ -27,6 +28,7 @@ public class Sprint {
     public java.sql.Date getDataInicio() { return (java.sql.Date) dataInicio; }
     public java.sql.Date getDataFim() { return (java.sql.Date) dataFim; }
     public boolean isMarkedForDeletion() { return markedForDeletion; }
+    public int getLiberado() { return liberado; }
 
     public void setId(int id) { this.id = id; }
     public void setNumSprint(int numSprint) { this.numSprint = numSprint; }
@@ -35,5 +37,6 @@ public class Sprint {
     public void setMarkedForDeletion() {
         this.markedForDeletion = true;
     }
+    public void setLiberado(int liberado) { this.liberado = liberado; }
 
 }

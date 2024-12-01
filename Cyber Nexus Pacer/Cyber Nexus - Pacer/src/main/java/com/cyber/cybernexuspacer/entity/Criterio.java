@@ -5,8 +5,8 @@ public class Criterio {
     private String titulo;
     private String descricao;
 
-    // Construtores, Getters e Setters
-    public Criterio( String titulo, String descricao) {
+    // Construtor sem ID
+    public Criterio(String titulo, String descricao) {
         this.titulo = titulo;
         this.descricao = descricao;
     }
@@ -15,8 +15,7 @@ public class Criterio {
     public String getTitulo() { return titulo; }
     public String getDescricao() { return descricao; }
 
-
     public void setId(int id) { this.id = id; }
-    public void settitulo(String titulo) { this.titulo = titulo; }
-    public void setEmail(String descricao) { this.descricao = descricao; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
 }

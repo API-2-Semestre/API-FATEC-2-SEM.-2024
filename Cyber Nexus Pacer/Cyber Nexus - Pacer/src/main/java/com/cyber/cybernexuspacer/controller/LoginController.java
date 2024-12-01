@@ -57,24 +57,30 @@ public class LoginController {
             // Verifica se o login e a senha estão corretos no banco de dados
             if (loginDao.verificarLogin(nome, senha, tipoUsuario)) {
                 // Se estiverem corretos, muda a tela
-                if ("Aluno".equals(tipoUsuario) && "aluno".equals(senha)) {
+                if ("Aluno".equals(tipoUsuario) && "fatec2024".equals(senha)) {
                     redirecionarParaRecuperacaoSenha(nome);
                 }
                 else if ("Aluno".equals(tipoUsuario)) {
-                    System.out.println("email: " + nome);
+                    boolean podeAcessar = loginDao.verificarAcessoAluno(nome);  // Verifica se o aluno pode acessar
+                    if (podeAcessar) {
+                        // Se o aluno puder acessar, continua o processo de login normal
+                        // Aqui, após a validação, busca os detalhes do aluno e armazena na sessão
+                        AreaDoAluno aluno = loginDao.buscarAlunoPorEmail(nome);  // Método para buscar detalhes do aluno
+                        AlunoSession.setAlunoLogado(aluno);
 
-                    // Aqui, após a validação, busca os detalhes do aluno e armazena na sessão
-                    AreaDoAluno aluno = loginDao.buscarAlunoPorEmail(nome);  // Método para buscar detalhes do aluno
+                        Main.setRoot("AreaDoAluno-view");
+                        System.out.println("email: " + nome);
+                    } else {
+                        // Se o aluno não puder acessar, exibe um alerta
+                        lblUsuarioESenhaInvalidos.setText("Sistema não liberado ainda. Acesso bloqueado.");
+                        lblUsuarioESenhaInvalidos.setLayoutX(270);
+                    }
 
-                    // Armazena o aluno logado na sessão
-                    AlunoSession.setAlunoLogado(aluno);
-
-                    Main.setRoot("AreaDoAluno-view");
                 }
+                // Lógica para outros tipos de usuários (Admin, Professor)
                 else if ("Admin".equals(tipoUsuario)) {
                     Main.setRoot("TelaMenu-view");
-                }
-                else if ("Professor".equals(tipoUsuario)) {
+                } else if ("Professor".equals(tipoUsuario)) {
                     Main.setRoot("TelaMenu-view");
                 }
             } else {

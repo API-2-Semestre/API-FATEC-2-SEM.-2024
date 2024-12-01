@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.layout.VBox?>
 <AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cyber.cybernexuspacer.controller.CriteriosController">
     <children>
         <!-- Título e Logo -->
         <Pane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: #D9D9D9;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-            <Button fx:id="btnAcompSprint" layoutX="204.0" layoutY="546.0" mnemonicParsing="false" onAction="#handleAcompSprint" prefHeight="32.0" prefWidth="125.0" style="-fx-background-color: #86B6DD;" text="Acomp. Sprints" textAlignment="CENTER" textFill="WHITE">
+            <Button fx:id="btnAcompSprint" layoutX="154.0" layoutY="546.0" mnemonicParsing="false" onAction="#handleAcompSprint" prefHeight="32.0" prefWidth="107.0" style="-fx-background-color: #369C06;" text="Acomp. Sprints" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
             </Button>
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="181.0" layoutY="30.0" prefHeight="43.0" prefWidth="438.0" style="-fx-background-color: #86B6DD;" text="CADASTRO DE CRITÉRIOS E DATAS" textAlignment="CENTER" textFill="WHITE">
                       <font>
@@ -31,27 +39,44 @@
                           <Image url="@../imagens/fatec.png" />
                       </image>
                   </ImageView>
-            <ImageView blendMode="MULTIPLY" fitHeight="60.0" fitWidth="150.0" layoutX="8.0" layoutY="1.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../imagens/logo Cyber Nexus.png" />
-               </image>
-            </ImageView>
             <ScrollPane fx:id="scrollCriteriosCriados" layoutX="281.0" layoutY="234.0" prefHeight="259.0" prefWidth="470.0">
               <content>
-                <AnchorPane fx:id="campo_criterios" minHeight="0.0" minWidth="0.0" prefHeight="396.0" prefWidth="452.0" />
+                <AnchorPane fx:id="campo_criterios" minHeight="0.0" minWidth="0.0" prefHeight="258.0" prefWidth="452.0" />
               </content>
             </ScrollPane>
                 <!-- Botão "Adicionar Sprint" -->
-                <Button fx:id="adicionarSprintButton" layoutX="10.0" layoutY="115.0" mnemonicParsing="false" onAction="#handleAdicionarSprint" prefHeight="51.0" prefWidth="251.0" style="-fx-background-color: #369C06;" text="ADICIONAR SPRINT" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                <Button fx:id="adicionarSprintButton" layoutX="10.0" layoutY="115.0" mnemonicParsing="false" onAction="#handleAdicionarSprint" prefHeight="51.0" prefWidth="251.0" style="-fx-background-color: #FFB617;" text="ADICIONAR SPRINT" textAlignment="CENTER" textFill="WHITE" wrapText="true">
                     <font>
                         <Font name="System Bold" size="12.0" />
                     </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
                 </Button>
-            <ScrollPane layoutX="10.0" layoutY="176.0" prefHeight="299.0" prefWidth="251.0">
+            <ScrollPane layoutX="10.0" layoutY="176.0" prefHeight="316.0" prefWidth="251.0">
               <content>
                   <VBox fx:id="campo_sprints" spacing="10.0" />
               </content>
             </ScrollPane>
+            <ImageView fitHeight="99.0" fitWidth="276.0" layoutX="-44.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../imagens/logo%20Cyber%20Nexus.png" />
+               </image>
+            </ImageView>
+              <Button fx:id="btnSairCriterios" layoutX="10.0" layoutY="546.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="32.0" prefWidth="107.0" style="-fx-background-color: #86B6DD;" text="Voltar" textAlignment="CENTER" textFill="WHITE">
+                  <font>
+                      <Font name="System Bold" size="12.0" />
+                  </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Button>
             </children>
         </Pane>
 
@@ -61,10 +86,16 @@
             <children>
                 <TextField fx:id="tituloCriterio" prefHeight="25.0" prefWidth="470.0" promptText="Título do Critério" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                 <TextField fx:id="descricaoCriterio" alignment="TOP_LEFT" layoutX="1.0" layoutY="35.0" prefHeight="78.0" prefWidth="342.0" promptText="Descrição do critério." AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="127.0" />
-                <Button fx:id="btnCriarCriterio" layoutX="508.0" layoutY="35.0" onAction="#handleAdicionarCriterio" prefHeight="78.0" prefWidth="111.0" style="-fx-background-color: #369C06;" text="ADICIONAR CRITÉRIO" textAlignment="CENTER" textFill="WHITE" wrapText="true" AnchorPane.rightAnchor="1.0">
+                <Button fx:id="btnCriarCriterio" layoutX="508.0" layoutY="35.0" onAction="#handleAdicionarCriterio" prefHeight="78.0" prefWidth="111.0" style="-fx-background-color: #FFB617;" text="ADICIONAR CRITÉRIO" textAlignment="CENTER" textFill="WHITE" wrapText="true" AnchorPane.rightAnchor="1.0">
                     <font>
                         <Font name="System Bold" size="12.0" />
-                    </font></Button>
+                    </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <effect>
+                  <DropShadow />
+               </effect></Button>
             </children>
         </AnchorPane>
 
@@ -73,10 +104,12 @@
         <Button fx:id="btnConfirmar" layoutX="673.0" layoutY="553.0" mnemonicParsing="false" onAction="#onClickConfirmar" prefHeight="32.0" prefWidth="125.0" style="-fx-background-color: #369C06;" text="Confirmar" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="22.0" AnchorPane.rightAnchor="50.0">
             <font>
                 <Font name="System Bold" size="12.0" />
-            </font></Button>
-        <Button fx:id="btnSairCriterios" layoutX="41.0" layoutY="553.0" mnemonicParsing="false" onAction="#handleSair" prefHeight="32.0" prefWidth="125.0" style="-fx-background-color: #86B6DD;" text="Voltar ao menu" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="53.0">
-            <font>
-                <Font name="System Bold" size="12.0" />
-            </font></Button>
+            </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <effect>
+            <DropShadow />
+         </effect></Button>
     </children>
 </AnchorPane>

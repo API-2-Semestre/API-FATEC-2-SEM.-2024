@@ -9,35 +9,30 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class    CriterioDao {
+public class CriterioDao {
     public void inserirCriterio(Criterio criterio) {
         String sql = "INSERT INTO CRITERIOS (TITULO, DESCRICAO) VALUES (?, ?)";
         Connection connection = null;
         PreparedStatement stmt = null;
 
         try {
-            connection = ConexaoDao.getConnection(); // Obtém a conexão
+            connection = ConexaoDao.getConnection();
             stmt = connection.prepareStatement(sql);
 
             stmt.setString(1, criterio.getTitulo());
             stmt.setString(2, criterio.getDescricao());
-            stmt.executeUpdate(); // Executa a inserção
-
+            stmt.executeUpdate();
             System.out.println("Critério inserido com sucesso!");
 
         } catch (SQLException e) {
-            e.printStackTrace(); // Captura corretamente a SQLException
-        }finally {
+            e.printStackTrace();
+        } finally {
             try {
                 if (stmt != null) {
-                    stmt.close(); // Fechando o PreparedStatement
+                    stmt.close();
                 }
-                // Remova ou comente a linha abaixo para manter a conexão aberta
-                 //if (connection != null) {
-                 //    connection.close(); // Fechando a conexão
-                 //}
             } catch (SQLException e) {
-                e.printStackTrace(); // Caso algum erro ocorra ao fechar recursos
+                e.printStackTrace();
             }
         }
     }
@@ -50,19 +45,15 @@ public class    CriterioDao {
 
         try {
             Connection connection = ConexaoDao.getConnection();
-            assert connection != null;
             stmt = connection.prepareStatement(sql);
             rs = stmt.executeQuery();
 
-            // Itera sobre o ResultSet para preencher a lista de critérios
             while (rs.next()) {
                 String titulo = rs.getString("titulo");
                 String descricao = rs.getString("descricao");
 
-                // Cria um novo objeto Criterio e adiciona à lista
-                Criterio criterio = new Criterio(titulo, descricao);
+                Criterio criterio = new Criterio( titulo, descricao);
                 criterios.add(criterio);
-
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -71,9 +62,25 @@ public class    CriterioDao {
             if (stmt != null) stmt.close();
         }
 
-        return criterios;  // Retorna a lista de critérios
+        return criterios;
     }
 
+    // Método para deletar critério pelo ID
+    public void deletarCriterio(String titulo) throws SQLException {
+        String sql = "DELETE FROM CRITERIOS WHERE TITULO = ?";
+        Connection connection = null;
+        PreparedStatement stmt = null;
+
+        try {
+            connection = ConexaoDao.getConnection();
+            stmt = connection.prepareStatement(sql);
+            stmt.setString(1, titulo);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (stmt != null) stmt.close();
+            if (connection != null) connection.close();
+        }
+    }
 }
-
-

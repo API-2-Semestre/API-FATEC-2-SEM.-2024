@@ -75,8 +75,16 @@ public class RecuperarSenhaController {
                 // Atualiza a senha no banco de dados
                 boolean sucesso = loginDao.atualizarSenha(nomeUsuario, novaSenha);
                 if (sucesso) {
+                    // Carregar nova view
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cyber/cybernexuspacer/fxml/login-view.fxml"));
+                    Parent root = loader.load();
+
+                    // Obtém o stage atual
+                    Stage stage = (Stage) btnEnviar.getScene().getWindow();
+                    stage.setScene(new Scene(root));
+                    stage.show();
+                    //Msg de sucesso no banco
                     System.out.println("Senha atualizada com sucesso!");
-                    Main.setRoot("login-view");
                 } else {
                     System.out.println("Erro ao atualizar senha!");
                 }

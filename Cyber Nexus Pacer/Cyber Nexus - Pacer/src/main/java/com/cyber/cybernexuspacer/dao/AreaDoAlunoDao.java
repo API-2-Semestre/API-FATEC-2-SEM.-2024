@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class AreaDoAlunoDao {
 
     // Método para listar os alunos do mesmo grupo que o aluno logado

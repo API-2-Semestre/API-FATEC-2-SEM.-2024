@@ -1,24 +1,14 @@
 package com.cyber.cybernexuspacer.controller;
 
-import com.cyber.cybernexuspacer.dao.CriterioDao;
 import com.cyber.cybernexuspacer.dao.PontuacaoGruposDao;
 import com.cyber.cybernexuspacer.dao.SprintDao;
-import com.cyber.cybernexuspacer.entity.Criterio;
 import com.cyber.cybernexuspacer.entity.PontuacaoGrupo;
 import com.cyber.cybernexuspacer.entity.Sprint;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import javafx.util.Pair;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -29,262 +19,211 @@ import java.util.Map;
 public class PontuacaoGruposController {
 
     @FXML
-    private ImageView btn_print_nota_grupo41;
+    private TextField txtDiasLiberados;
 
     @FXML
-    private ImageView btn_print_nota_individual41;
+    private AnchorPane pontuacao_scroll_sprints; // Container para os botões das Sprints
 
     @FXML
-    private ImageView logofatec;
+    private AnchorPane mostrar_Grupos; // Container para exibir os grupos e notas
 
-    @FXML
-    private Text nota_grupo41;
+    private final Map<String, TextField> notasMap = new HashMap<>(); // Para gerenciar os campos de notas
 
-    @FXML
-    private Text nota_individual41;
-
-    @FXML
-    private Button pontos_btn_sprint1;
-
-    @FXML
-    private Button pontuacao_btn_confirmar;
-
-    @FXML
-    private Button pontuacao_btn_sair;
-
-    @FXML
-    private Button pontuacao_btn_sprint2;
-
-    @FXML
-    private Button pontuacao_btn_sprint3;
-
-    @FXML
-    private Button pontuacao_btn_sprint4;
-
-    @FXML
-    private Text pontuacao_label_integrantes;
-
-    @FXML
-    private Text pontuacao_label_integrantes1;
-
-    @FXML
-    private Text pontuacao_label_integrantes11;
-
-    @FXML
-    private Text pontuacao_label_integrantes12;
-
-    @FXML
-    private Text pontuacao_label_integrantes13;
-
-    @FXML
-    private Text pontuacao_label_integrantes14;
-
-    @FXML
-    private Text pontuacao_label_integrantes141;
-
-    @FXML
-    private Text pontuacao_label_integrantes1411;
-
-    @FXML
-    private Text pontuacao_label_name;
-
-    @FXML
-    private Text pontuacao_label_name1;
-
-    @FXML
-    private Text pontuacao_label_name11;
-
-    @FXML
-    private Text pontuacao_label_name12;
-
-    @FXML
-    private Text pontuacao_label_name13;
-
-    @FXML
-    private Text pontuacao_label_name14;
-
-    @FXML
-    private Text pontuacao_label_name141;
-
-    @FXML
-    private Text pontuacao_label_name1411;
-
-    @FXML
-    private Text pontuacao_label_nota;
-
-    @FXML
-    private Text pontuacao_label_nota1;
-
-    @FXML
-    private Text pontuacao_label_nota11;
-
-    @FXML
-    private Text pontuacao_label_nota12;
-
-    @FXML
-    private Text pontuacao_label_nota13;
-
-    @FXML
-    private Text pontuacao_label_nota14;
-
-    @FXML
-    private Text pontuacao_label_nota141;
-
-    @FXML
-    private Text pontuacao_label_nota1411;
-
-    @FXML
-    private AnchorPane pontuacao_scroll_sprints;
-
-    @FXML
-    private Label txt_acompanhamento_pacer;
-
-    @FXML
-    private Text txt_nota_grupo41;
-
-    @FXML
-    private Text txt_nota_individual41;
-
-    @FXML
-    private Label txt_ola_professor;
-
-    @FXML
-    private Text txtaluno41;
-
-    @FXML
-    private Label txtcibernexus;
-
-    @FXML
-    private Text txtgrupo41;
-
-    @FXML
-    private AnchorPane mostrar_Grupos;// ScrollPane para exibir os critérios
-
-    TextField lblNotasSprint;
-    private Map<Pair<String, Integer>, TextField> notasMap = new HashMap<>();
+    private Button selectedSprintButton; // Referência ao botão da sprint selecionada
 
     @FXML
     public void initialize() throws SQLException {
-        carregarGrupos();
+        carregarSprints(); // Carregar Sprints dinamicamente
     }
 
-    private void exibirGrupos(int id, String grupo, int integrantes, int nota, int numSprint) {
-        // Criação do campo de exibição do critério
-        Pane paneCriterio = new Pane();
-        paneCriterio.setPrefSize(579, 60);
-        paneCriterio.setLayoutX(4);
-        //paneCriterio.setLayoutY(10);
-        paneCriterio.setStyle("-fx-background-color: #93DD86; -fx-background-radius: 4;");
-
-        // Adicionando o nomeEquipe e os integrantes
-        Label nomeEquipe = criaLabel(7,7,"Nome: " + grupo, "-fx-text-fill: black; -fx-font-size: 14px; -fx-font-family: 'Arial';"  );
-        Label integrantesEquipe = criaLabel(7,34,"Integrantes da Equipe: " + String.valueOf(integrantes), "-fx-text-fill: black; -fx-font-size: 12px; -fx-font-family: 'Arial';");
-        Label labelNotas = criaLabel(482,10,"Notas da Sprint", "-fx-text-fill: black; -fx-font-size: 12px; -fx-font-family: 'Arial';");
-
-        //int notaInteira = (int) nota;
-
-        lblNotasSprint = new TextField(String.valueOf(nota));
-        lblNotasSprint.setLayoutX(509);
-        lblNotasSprint.setLayoutY(30);
-        lblNotasSprint.setPrefWidth(44);
-        lblNotasSprint.setStyle("-fx-font-size: 12px; -fx-font-family: 'Arial';");
-
-        // Armazena o TextField associado ao nome do grupo e ao sprintId
-        Pair<String, Integer> chave = new Pair<>(grupo, numSprint);
-        notasMap.put(chave, lblNotasSprint);
-
-        Rectangle retangNotaSprint = new Rectangle();
-        retangNotaSprint.setWidth(44);
-        retangNotaSprint.setHeight(23);
-        retangNotaSprint.setLayoutX(501);
-        retangNotaSprint.setLayoutY(27);
-        retangNotaSprint.setFill(Color.web("#d4ffe6"));
-
-        paneCriterio.getChildren().addAll(
-                nomeEquipe, integrantesEquipe,
-                labelNotas,retangNotaSprint,lblNotasSprint
-
-        );
-
-        // Verifica quantos critérios já existem no campo_criterios
-        int numeroDeCriterios = mostrar_Grupos.getChildren().size();
-
-        // Calcula a posição Y para o novo critério
-        double novaPosicaoY = numeroDeCriterios == 0 ? 5 : numeroDeCriterios * 70;
-
-        // Define a posição do novo critério
-        paneCriterio.setLayoutY(novaPosicaoY);
-
-        // Adiciona o novo critério ao AnchorPane (campo_criterios)
-        mostrar_Grupos.getChildren().add(paneCriterio);
-    }
-
-    private Sprint obterSprintAtual() throws SQLException {
-        // Carregar o sprint atual de algum lugar, por exemplo, do banco de dados
+    private void carregarSprints() throws SQLException {
         SprintDao sprintDao = new SprintDao();
-        return sprintDao.obterSprintAtual(); // Método para obter o sprint atual
-    }
+        List<Sprint> sprints = sprintDao.listarSprints();
 
-    private void carregarGrupos() throws SQLException {
-        PontuacaoGruposDao pontuacaoGruposDao = new PontuacaoGruposDao();
-        List<PontuacaoGrupo> pontGrupo = pontuacaoGruposDao.pesquisarGrupos();
-
-        // Obter o sprint atual
-        Sprint sprintAtual = obterSprintAtual(); // Aqui você busca o sprint atual
-        if (sprintAtual != null) {
-            int numSprint = sprintAtual.getNumSprint(); // Obtenha o sprintID, ou numSprint
-
-            // Agora, ao exibir os grupos, passe o sprintID
-            for (PontuacaoGrupo pontuacoes : pontGrupo) {
-                exibirGrupos(pontuacoes.getId(), pontuacoes.getGrupo(), pontuacoes.getIntegrantes(), pontuacoes.getNota(), numSprint);
+        double yPosition = 55.0; // Posição inicial para os botões
+        for (Sprint sprint : sprints) {
+            Button sprintButton = new Button("SPRINT " + sprint.getNumSprint());
+            sprintButton.setLayoutX(10.0);
+            sprintButton.setLayoutY(yPosition);
+            sprintButton.setPrefWidth(120.0);
+            sprintButton.setPrefHeight(30.0);
+            if (sprint.getLiberado() == 1){
+                sprintButton.setStyle("-fx-background-color: #86B6DD; -fx-text-fill: WHITE; -fx-font-size: 12px;");
+            }else{
+                sprintButton.setStyle("-fx-background-color: #FF0000; -fx-text-fill: WHITE; -fx-font-size: 12px;");
             }
-        } else {
-            System.out.println("Não foi possível encontrar o sprint atual.");
+
+
+            // Evento ao clicar no botão
+            sprintButton.setOnAction(event -> {
+                try {
+                    handleSprintSelection(sprintButton, sprint.getNumSprint());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            pontuacao_scroll_sprints.getChildren().add(sprintButton);
+            yPosition += 40.0;
         }
     }
 
-    private Label criaLabel(double layoutX, double layoutY, String descricao, String style) {
-        Label label = new Label(descricao);
-        label.setLayoutX(layoutX);
-        label.setLayoutY(layoutY);
-        label.setStyle(style);
-        return label;
+    private void handleSprintSelection(Button clickedButton, int numSprint) throws SQLException {
+        // Resetar a cor de todos os botões para a cor original
+        for (var node : pontuacao_scroll_sprints.getChildren()) {
+            if (node instanceof Button) {
+                ((Button) node).setStyle("-fx-background-color: #86B6DD; -fx-text-fill: WHITE; -fx-font-size: 12px;");
+            }
+        }
+
+        // Alterar a cor do botão clicado
+        clickedButton.setStyle("-fx-background-color: #369C06; -fx-text-fill: WHITE; -fx-font-size: 12px;");
+
+        // Atualizar o botão selecionado
+        selectedSprintButton = clickedButton;
+
+        // Carregar as notas para a sprint selecionada
+        carregarNotasPorSprint(numSprint);
+    }
+
+    private void carregarNotasPorSprint(int numSprint) throws SQLException {
+        PontuacaoGruposDao pontuacaoGruposDao = new PontuacaoGruposDao();
+        List<PontuacaoGrupo> grupos = pontuacaoGruposDao.pesquisarGrupos();
+
+        mostrar_Grupos.getChildren().clear();
+
+        double yPosition = 10.0; // Posição inicial dos grupos
+        for (PontuacaoGrupo grupo : grupos) {
+            // Busca as notas da Sprint
+            List<Integer> notas = pontuacaoGruposDao.selecionarNotasSprint(grupo.getGrupo(), numSprint);
+
+            int nota = notas.isEmpty() ? 0 : notas.get(0); // Se não houver nota, exibe 0
+
+            // Exibir o grupo e a nota
+            Pane grupoPane = criarGrupoPane(grupo.getGrupo(), grupo.getIntegrantes(), nota, yPosition);
+            mostrar_Grupos.getChildren().add(grupoPane);
+            yPosition += 70.0; // Incrementar a posição para o próximo grupo
+        }
+    }
+
+    private Pane criarGrupoPane(String grupo, int integrantes, int nota, double yPosition) {
+        Pane grupoPane = new Pane();
+        grupoPane.setPrefSize(579, 60);
+        grupoPane.setLayoutX(4);
+        grupoPane.setLayoutY(yPosition);
+        grupoPane.setStyle("-fx-background-color: #93DD86; -fx-background-radius: 4;");
+
+        Label nomeLabel = new Label("Nome: " + grupo);
+        nomeLabel.setLayoutX(10);
+        nomeLabel.setLayoutY(10);
+        nomeLabel.setStyle("-fx-text-fill: black; -fx-font-size: 14px;");
+
+        Label integrantesLabel = new Label("Integrantes da Equipe: " + integrantes);
+        integrantesLabel.setLayoutX(10);
+        integrantesLabel.setLayoutY(30);
+        integrantesLabel.setStyle("-fx-text-fill: black; -fx-font-size: 12px;");
+
+        TextField notaField = new TextField(String.valueOf(nota));
+        notaField.setLayoutX(480);
+        notaField.setLayoutY(15);
+        notaField.setPrefWidth(50);
+        notaField.setStyle("-fx-font-size: 12px;");
+
+        notasMap.put(grupo, notaField);
+
+        grupoPane.getChildren().addAll(nomeLabel, integrantesLabel, notaField);
+        return grupoPane;
+    }
+
+
+    @FXML
+    void onClickBloquearSprint(ActionEvent event) throws SQLException {
+        if (selectedSprintButton == null) {
+            System.out.println("Nenhuma sprint selecionada!");
+            return;
+        }
+
+        // Extrair o número da sprint selecionada
+        int numSprint = Integer.parseInt(selectedSprintButton.getText().replace("SPRINT ", ""));
+
+        // Chamar o método do DAO para liberar a sprint
+        PontuacaoGruposDao.bloquearSprint(numSprint);
+        carregarSprints();
+        showAlert(Alert.AlertType.INFORMATION, "Sucesso", "Sprint " + numSprint + " bloqueada com sucesso!");
     }
 
     @FXML
-    void onbtnconfirmar(ActionEvent event) throws SQLException {
-        for (Map.Entry<Pair<String, Integer>, TextField> entry : notasMap.entrySet()) {
-            Pair<String, Integer> chave = entry.getKey();
-            String nomeGrupo = chave.getKey(); // Nome do grupo
-            int numSprint = chave.getValue();   // ID do sprint
-            int novaNota = Integer.parseInt(entry.getValue().getText());
-
-            PontuacaoGruposDao.salvarNotaGrupo(nomeGrupo, numSprint, novaNota);
+    void onClickLiberarSprint(ActionEvent event) throws SQLException {
+        if (selectedSprintButton == null) {
+            System.out.println("Nenhuma sprint selecionada!");
+            return;
         }
+
+        // Extrair o número da sprint selecionada
+        int numSprint = Integer.parseInt(selectedSprintButton.getText().replace("SPRINT ", ""));
+
+        // Chamar o método do DAO para liberar a sprint
+        PontuacaoGruposDao.liberarSprint(numSprint);
+        carregarSprints();
+        showAlert(Alert.AlertType.INFORMATION, "Sucesso", "Sprint " + numSprint + " liberada com sucesso!");
     }
+
+
+    @FXML
+    void onbtnconfirmar(ActionEvent event) throws SQLException {
+        // Atualizar as notas no banco
+        PontuacaoGruposDao pontuacaoGruposDao = new PontuacaoGruposDao();
+
+        if (selectedSprintButton == null) {
+            showAlert(Alert.AlertType.WARNING, "Atenção", "Nenhuma sprint selecionada!");
+            return;
+        }
+
+        // Extrair o número da sprint selecionada
+        int numSprint = Integer.parseInt(selectedSprintButton.getText().replace("SPRINT ", ""));
+
+        // 1. Atualizar as notas para os grupos
+        for (Map.Entry<String, TextField> entry : notasMap.entrySet()) {
+            String grupo = entry.getKey();
+            int novaNota = Integer.parseInt(entry.getValue().getText());
+            pontuacaoGruposDao.salvarNotaGrupo(grupo, numSprint, novaNota);
+        }
+
+        // 2. Atualizar os dias liberados para a sprint
+        String diasLiberadosStr = txtDiasLiberados.getText();
+
+        // Validar se o valor inserido é um número válido
+        if (diasLiberadosStr.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Atenção", "Por favor, insira o número de dias liberados.");
+            return;
+        }
+
+        int diasLiberados;
+        try {
+            diasLiberados = Integer.parseInt(diasLiberadosStr); // Converte o valor para inteiro
+        } catch (NumberFormatException e) {
+            showAlert(Alert.AlertType.WARNING, "Erro", "Valor inválido para dias liberados.");
+            return;
+        }
+
+        // Chamar o método do DAO para atualizar os dias liberados para a sprint selecionada
+        SprintDao.atualizarDiasLiberados(numSprint, diasLiberados);
+
+        showAlert(Alert.AlertType.INFORMATION, "Sucesso", "Notas salvas no banco com sucesso!");
+        showAlert(Alert.AlertType.INFORMATION, "Sucesso", "Dias liberados atualizados para a Sprint " + numSprint + " com sucesso!");
+    }
+
+    // Método auxiliar para mostrar alertas
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType, message, ButtonType.OK);
+        alert.setTitle(title);
+        alert.setHeaderText(null); // Não queremos um cabeçalho
+        alert.showAndWait();
+    }
+
+
     @FXML
     void onbtnsair(ActionEvent event) throws IOException {
         Main.setRoot("TelaMenu-view");
     }
-
-    @FXML
-    void onbtnsprint1(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onbtnsprint2(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onbtnsprint3(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onbtnsprint4(ActionEvent event) {
-
-    }
-
 }

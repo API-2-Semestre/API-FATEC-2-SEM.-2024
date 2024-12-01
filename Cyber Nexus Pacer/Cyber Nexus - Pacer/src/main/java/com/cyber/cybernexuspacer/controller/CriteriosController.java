@@ -11,7 +11,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -104,22 +103,26 @@ public class CriteriosController {
 
         Label descricaoLabel = criaLabel(10,30,"Descrição: " + descricao, "-fx-text-fill: white; -fx-font-size: 12px;");
         descricaoLabel.setWrapText(true);  // Permite quebra de linha
-        descricaoLabel.setPrefWidth(400);  // Defina uma largura preferencial
+        descricaoLabel.setPrefWidth(380);  // Defina uma largura preferencial
+
+        Button excluirButton = new Button("Excluir");
+        excluirButton.setLayoutX(372);
+        excluirButton.setLayoutY(8);
+        excluirButton.setStyle("-fx-text-fill: white; -fx-font-size: 12px; -fx-background-color: #FF0000;");
+        excluirButton.setOnAction(e -> handleExcluirCriterio(titulo, novoCriterio));
 
 
-        novoCriterio.getChildren().addAll(tituloLabel, descricaoLabel);
+        novoCriterio.getChildren().addAll(tituloLabel, descricaoLabel, excluirButton);
 
-        // Verifica quantos critérios já existem no campo_criterios
+        // Verifica quantos critérios já existem no campo_criterios para setar posição de altura correto
         int numeroDeCriterios = campo_criterios.getChildren().size();
-
-        // Calcula a posição Y para o novo critério
         double novaPosicaoY = numeroDeCriterios == 0 ? 5 : numeroDeCriterios * 78;
-
-        // Define a posição do novo critério
         novoCriterio.setLayoutY(novaPosicaoY);
+
 
         // Adiciona o novo critério ao AnchorPane (campo_criterios)
         campo_criterios.getChildren().add(novoCriterio);
+        campo_criterios.setPrefHeight(novaPosicaoY);
     }
 
     private void carregarCriterios() throws SQLException {
@@ -130,6 +133,33 @@ public class CriteriosController {
             exibirCriterio(criterio.getTitulo(), criterio.getDescricao());
         }
     }
+
+    private void handleExcluirCriterio(String titulo, Pane criterioPane) {
+        CriterioDao criterioDao = new CriterioDao();
+        SprintDao sprintDao = new SprintDao(); // Para buscar a data final da primeira sprint
+
+        try {
+            // Obter a data final da primeira sprint
+            Date dataFinalPrimeiraSprint = (Date) sprintDao.buscarDataFinalPrimeiraSprint();
+
+            if (dataFinalPrimeiraSprint != null && new Date(System.currentTimeMillis()).after(dataFinalPrimeiraSprint)) {
+                // Caso a data atual seja posterior à data final da primeira sprint, exibe mensagem e interrompe
+                exibirMensagem("Não é possível excluir o critério após a data final da primeira sprint.");
+                return;
+            }
+
+            // Excluir o critério
+            criterioDao.deletarCriterio(titulo);
+            campo_criterios.getChildren().remove(criterioPane);
+            exibirMensagem("Critério excluído com sucesso!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            exibirMensagem("Erro ao excluir o critério.");
+        }
+    }
+
+
+
 
 
 //***ADICIONAR SPRINTS*****//
@@ -155,7 +185,8 @@ public class CriteriosController {
         novoSprintBox.getChildren().addAll(labelSprint, dataInicioPicker, dataFimPicker);
 
         // Adiciona o novo HBox ao VBox que contém as sprints
-        campo_sprints.getChildren().add(novoSprintBox);
+        //campo_sprints.getChildren().add(novoSprintBox);
+        exibirSprint(novoSprint, dataInicioPicker, dataFimPicker);
 
         // Adicione listeners para os DatePickers
         dataInicioPicker.setOnAction(e -> {
@@ -234,11 +265,8 @@ public class CriteriosController {
         double novaPosicaoY = numeroDeCriterios == 0 ? 5 : numeroDeCriterios * 130;
         pane.setLayoutY(novaPosicaoY);
 
-
         return pane;
     }
-
-
 
     private void carregarSprints() throws SQLException {
         if (!sprints.isEmpty()) {
@@ -291,7 +319,6 @@ public class CriteriosController {
             }
         }
 
-
         //adicionar crierios
         CriterioDao criterioDao = new CriterioDao();
         for (Criterio criterio : criterios) {
@@ -316,7 +343,6 @@ public class CriteriosController {
                 sprints.remove(i); // Remove da lista
             }
         }
-
         sprintDao.deletarSprint(index); // Exclui do banco de dados
         carregarSprints(); // Atualiza a interface após deleção
     }

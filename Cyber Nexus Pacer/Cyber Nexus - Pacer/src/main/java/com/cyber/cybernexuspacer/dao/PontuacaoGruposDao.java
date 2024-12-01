@@ -1,7 +1,6 @@
 package com.cyber.cybernexuspacer.dao;
 
 import com.cyber.cybernexuspacer.entity.PontuacaoGrupo;
-import com.cyber.cybernexuspacer.entity.Sprint;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,66 +12,97 @@ import java.util.List;
 public class PontuacaoGruposDao {
 
     public static List<PontuacaoGrupo> pesquisarGrupos() throws SQLException {
-        String sql = "SELECT G.ID, G.GRUPO, NG.NOTA_GRUPO, COUNT(A.id) AS INTEGRANTES\n" +
-                "FROM GRUPOS AS G\n" +
-                "LEFT JOIN NOTAS_GRUPOS AS NG ON G.ID = NG.ID\n" +
-                "LEFT JOIN ALUNOS AS A ON G.GRUPO = A.GRUPO\n" +
-                "GROUP BY  G.ID, G.GRUPO;";
+        String sql = """
+                SELECT G.ID, G.GRUPO, NG.NOTA_GRUPO, COUNT(A.id) AS INTEGRANTES
+                FROM GRUPOS AS G
+                LEFT JOIN NOTAS_GRUPOS AS NG ON G.ID = NG.ID
+                LEFT JOIN ALUNOS AS A ON G.GRUPO = A.GRUPO
+                GROUP BY G.ID, G.GRUPO;
+                """;
 
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
         List<PontuacaoGrupo> pontGrupos = new ArrayList<>();
+        try (Connection connection = ConexaoDao.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
-        try {
-
-            stmt = ConexaoDao.getConnection().prepareStatement(sql);
-            rs = stmt.executeQuery();
-
-            // Itera sobre o ResultSet para preencher a lista de critérios
+            // Itera sobre o ResultSet para preencher a lista de grupos
             while (rs.next()) {
                 int id = rs.getInt("id");
                 String grupo = rs.getString("grupo");
                 int integrantes = rs.getInt("integrantes");
                 int nota = rs.getInt("nota_grupo");
 
-                // Cria um novo objeto Criterio e adiciona à lista
-                PontuacaoGrupo pontuacaoGrupo = new PontuacaoGrupo(id,grupo, integrantes, nota);
-                pontGrupos.add(pontuacaoGrupo);
-
+                // Adiciona o grupo à lista
+                pontGrupos.add(new PontuacaoGrupo(id, grupo, integrantes, nota));
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            if (rs != null) rs.close();
-            if (stmt != null) stmt.close();
         }
-
         return pontGrupos;
-
     }
 
-    public static void salvarNotaGrupo(String nomeGrupo, int num_sprint, int novaNota) throws SQLException {
-        String sql = "UPDATE NOTAS_GRUPOS SET NOTA_GRUPO = ? WHERE GRUPO = ? AND NUM_SPRINT = ?";  // Usando o nome do grupo e o sprintId
+    public static void salvarNotaGrupo(String nomeGrupo, int numSprint, int novaNota) throws SQLException {
+        String sql = "UPDATE NOTAS_GRUPOS SET NOTA_GRUPO = ? WHERE GRUPO = ? AND NUM_SPRINT = ?";
 
-        PreparedStatement stmt = null;
+        try (Connection connection = ConexaoDao.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-        try {
+            stmt.setInt(1, novaNota);
+            stmt.setString(2, nomeGrupo);
+            stmt.setInt(3, numSprint);
 
-            stmt = ConexaoDao.getConnection().prepareStatement(sql);
-            stmt = ConexaoDao.getConnection().prepareStatement(sql);
-            stmt.setInt(1, novaNota);      // Nome do grupo
-            stmt.setString(2, nomeGrupo);          // ID do sprint
-            stmt.setInt(3, num_sprint);
             stmt.executeUpdate();
-
-        }catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-
-            if (stmt != null) stmt.close();
         }
+    }
 
+
+    public static List<Integer> selecionarNotasSprint(String grupo, int numSprint) throws SQLException {
+        String sql = "SELECT NOTA_GRUPO FROM NOTAS_GRUPOS WHERE GRUPO = ? AND NUM_SPRINT = ?";
+
+        List<Integer> notas = new ArrayList<>();
+        try (Connection connection = ConexaoDao.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, grupo);
+            stmt.setInt(2, numSprint);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    notas.add(rs.getInt("NOTA_GRUPO"));
+                }
+            }
+        }
+        return notas;
+    }
+
+    public static void liberarSprint(int numSprint) throws SQLException {
+        String sql = """
+            UPDATE SPRINTS
+            SET LIBERADO = 1, DATA_LIBERACAO = CURRENT_DATE
+            WHERE NUM_SPRINT = ?;
+            """;
+
+        try (Connection connection = ConexaoDao.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, numSprint); // Configura o número da sprint
+
+            stmt.executeUpdate(); // Executa o update no banco
+        }
+    }
+
+    public static void bloquearSprint(int numSprint) throws SQLException {
+        String sql = """
+            UPDATE SPRINTS
+            SET LIBERADO = 0
+            WHERE NUM_SPRINT = ?;
+            """;
+
+        try (Connection connection = ConexaoDao.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, numSprint); // Configura o número da sprint
+
+            stmt.executeUpdate(); // Executa o update no banco
+        }
     }
 
 }
