@@ -17,7 +17,7 @@ public class PontuacaoGruposDao {
                 FROM GRUPOS AS G
                 LEFT JOIN NOTAS_GRUPOS AS NG ON G.ID = NG.ID
                 LEFT JOIN ALUNOS AS A ON G.GRUPO = A.GRUPO
-                GROUP BY G.ID, G.GRUPO;
+                GROUP BY G.ID, G.GRUPO,NG.NOTA_GRUPO;
                 """;
 
         List<PontuacaoGrupo> pontGrupos = new ArrayList<>();

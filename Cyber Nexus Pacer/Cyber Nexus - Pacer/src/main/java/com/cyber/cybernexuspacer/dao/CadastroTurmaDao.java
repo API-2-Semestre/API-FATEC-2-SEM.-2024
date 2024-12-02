@@ -12,10 +12,10 @@ public class CadastroTurmaDao {
     public static void CadastrarAlunos(AreaDoAluno aluno,Connection connection) throws SQLException {
 
         String sqlUsuario = "INSERT INTO USUARIOS (EMAIL, SENHA, TIPO_USUARIO) VALUES(?,?,?) ";
-        String sqlGrupo = "INSERT IGNORE INTO GRUPOS (GRUPO) VALUES(?) "; // MYSQL
+        //String sqlGrupo = "INSERT IGNORE INTO GRUPOS (GRUPO) VALUES(?) "; // MYSQL
 
         //Caso inserir registros no banco online, utilize o sqlGrupo abaixo, no banco local utilize o sqlGrupo acima
-        //String sqlGrupo = "INSERT INTO GRUPOS (GRUPO) VALUES (?) ON CONFLICT (GRUPO) DO NOTHING"; //POSTGRES
+        String sqlGrupo = "INSERT INTO GRUPOS (GRUPO) VALUES (?) ON CONFLICT (GRUPO) DO NOTHING"; //POSTGRES
 
         String sqlAluno = "INSERT INTO ALUNOS (NOME,EMAIL, GRUPO) VALUES(?, ?, ?)";
         String sqlNotasGrupos =

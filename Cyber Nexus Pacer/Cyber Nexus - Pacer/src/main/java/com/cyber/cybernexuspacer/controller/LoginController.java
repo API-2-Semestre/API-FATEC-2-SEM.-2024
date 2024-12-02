@@ -8,12 +8,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -26,6 +24,9 @@ public class LoginController {
     public Label lblTxtSistemaPacer;
     @FXML
     private Button btnEntrar;
+
+    @FXML
+    private Text esqueciMinhaSenha;
 
     @FXML
     private ImageView imgFatec;
@@ -117,4 +118,36 @@ public class LoginController {
             return "Aluno";
         }
     }
+
+    @FXML
+    private void esqueciPopup() {
+        String email = usuarioLogin.getText();
+
+        if (email.isEmpty()) {
+            // Exibe um alerta solicitando o preenchimento do email
+            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+            alerta.setTitle("Informação");
+            alerta.setHeaderText(null);
+            alerta.setContentText("Escreva o email no devido campo e clique novamente neste link para recuperação de senha.");
+            alerta.showAndWait();
+        } else {
+            try {
+                // Verifica se o email existe no banco de dados
+                if (loginDao.emailExiste(email)) {
+                    // Redireciona para a tela de recuperação de senha
+                    redirecionarParaRecuperacaoSenha(email);
+                } else {
+                    // Alerta caso o email não exista
+                    Alert alerta = new Alert(Alert.AlertType.ERROR);
+                    alerta.setTitle("Erro");
+                    alerta.setHeaderText(null);
+                    alerta.setContentText("O email fornecido não foi encontrado.");
+                    alerta.showAndWait();
+                }
+            } catch (SQLException | IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

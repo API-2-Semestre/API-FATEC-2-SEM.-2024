@@ -155,4 +155,17 @@ public class LoginDao {
         return false;  // Retorna false se não encontrar a data de liberação ou se o acesso não for liberado
     }
 
+    public boolean emailExiste(String email) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM usuarios WHERE email = ?";
+        try (Connection connection = ConexaoDao.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        return false;
+    }
+
 }

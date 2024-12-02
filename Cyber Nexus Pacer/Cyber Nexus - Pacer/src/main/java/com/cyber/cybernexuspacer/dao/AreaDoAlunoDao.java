@@ -98,13 +98,13 @@ public class AreaDoAlunoDao {
         return alunos;  // Retorna a lista de alunos
     }
 
-    public double buscaNota() throws SQLException {
+    public double buscaNota(int sprintSelecionada) throws SQLException {
         // Pegando sprint atual
-        Sprint sprintAtual = SprintDao.obterSprintAtual();
+        /*Sprint sprintAtual = SprintDao.obterSprintAtual();
 
         if (sprintAtual == null) {
             throw new SQLException("Nenhuma sprint ativa encontrada.");
-        }
+        }*/
 
         String sql = "SELECT SUM(NOTA_GRUPO) - ( " +
                 "    SELECT COALESCE(SUM(NOTA), 0) " +
@@ -130,14 +130,14 @@ public class AreaDoAlunoDao {
 
 
             stmt.setString(1, AlunoSession.getAlunoLogado().getGrupo());
-            stmt.setInt(2, sprintAtual.getNumSprint());
+            stmt.setInt(2, sprintSelecionada);
             stmt.setInt(3, AlunoSession.getAlunoLogado().getIdAlunoAvaliador());
             rs = stmt.executeQuery();
 
             if (rs.next()) {
                 return rs.getDouble("resultado"); // Retorna a nota do grupo
             } else {
-                throw new SQLException("Nota não encontrada para o grupo do aluno.");
+                return 0.0;
             }
 
         } catch (SQLException e) {
@@ -149,13 +149,13 @@ public class AreaDoAlunoDao {
         }
     }
 
-    public void salvarNota(int idAvaliador, int idReceptor, int nota, String tituloCriterio) throws SQLException {
+    public void salvarNota(int idAvaliador, int idReceptor, int nota, String tituloCriterio, int sprintSelecionada) throws SQLException {
         // Pegando sprint atual
-        Sprint sprintAtual = SprintDao.obterSprintAtual();
+        /*Sprint sprintAtual = SprintDao.obterSprintAtual();
 
         if (sprintAtual == null) {
             throw new SQLException("Nenhuma sprint ativa encontrada.");
-        }
+        }*/
 
         String sql = "INSERT INTO NOTAS (id_avaliador, id_receptor, nota, titulo_criterio, num_sprint) VALUES (?, ?, ?, ?, ?)";
 
@@ -167,7 +167,7 @@ public class AreaDoAlunoDao {
             stmt.setInt(2, idReceptor);           // ID do avaliado
             stmt.setInt(3, nota);                 // Nota
             stmt.setString(4, tituloCriterio);    // Título do critério
-            stmt.setInt(5, sprintAtual.getNumSprint());            // Número do sprint
+            stmt.setInt(5, sprintSelecionada);            // Número do sprint
 
             // Executar o insert
             stmt.executeUpdate();

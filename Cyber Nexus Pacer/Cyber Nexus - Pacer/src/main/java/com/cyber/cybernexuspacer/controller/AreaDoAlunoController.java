@@ -39,6 +39,8 @@ public class AreaDoAlunoController {
     @FXML
     private ComboBox<String> alunosComboBox;  // Referência para o ComboBox de alunos
 
+    private int sprintSelecionada = 0;
+
     private Map<String, Integer> alunosMap = new HashMap<>();  // Mapeamento nome -> ID do aluno
 
     private List<CheckBox> checkboxes = new ArrayList<>();
@@ -67,9 +69,20 @@ public class AreaDoAlunoController {
         AreaDoAluno alunoLogado = AlunoSession.getAlunoLogado();
         int idAvaliador = alunoLogado.getIdAlunoAvaliador(); // Agora pegamos o ID do aluno logado
 
+        // Verifique se a sprint foi selecionada
+        if (sprintSelecionada == 0) {
+            // Se a sprintSelecionada for 0, significa que a sprint não foi selecionada
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Aviso");
+            alert.setHeaderText(null);
+            alert.setContentText("Por favor, selecione uma sprint antes de salvar as notas.");
+            alert.showAndWait();
+            return;  // Interrompe a execução do método caso a sprint não tenha sido selecionada
+        }
+
         // Consultar a nota disponível para o grupo
         AreaDoAlunoDao areaDoAlunoDao = new AreaDoAlunoDao();
-        double notaDisponivel = areaDoAlunoDao.buscaNota();  // Pega a nota disponível do banco
+        double notaDisponivel = areaDoAlunoDao.buscaNota(sprintSelecionada);  // Pega a nota disponível do banco
 
         // Calcular a soma das notas atribuídas
         int somaNotas = criteriosSelecionados.values().stream().mapToInt(Integer::intValue).sum();
@@ -93,7 +106,7 @@ public class AreaDoAlunoController {
 
             // Agora você pode salvar a nota no banco de dados chamando o método no DAO
             //AreaDoAlunoDao areaDoAlunoDao = new AreaDoAlunoDao();
-            areaDoAlunoDao.salvarNota(idAvaliador, idReceptor, nota, tituloCriterio); // Salva a nota na tabela NOTAS
+            areaDoAlunoDao.salvarNota(idAvaliador, idReceptor, nota, tituloCriterio, sprintSelecionada); // Salva a nota na tabela NOTAS
 
         }
 
@@ -131,6 +144,7 @@ public class AreaDoAlunoController {
                 sprintButton.setStyle("-fx-background-color: #86B6DD; -fx-font-weight: bolder; -fx-padding: 10 20 10 20;");
                 sprintButton.setOnAction(event -> {
                     // Ação quando a sprint for clicada
+                    sprintSelecionada = sprint.getNumSprint();
                     System.out.println("Sprint " + sprint.getNumSprint() + " selecionada.");
                     // Você pode adicionar a lógica para lidar com o clique na sprint
                 });
@@ -170,7 +184,18 @@ public class AreaDoAlunoController {
     public void exibirNota() {
         try {
             AreaDoAlunoDao areaDoAlunoDao = new AreaDoAlunoDao();
-            double nota = areaDoAlunoDao.buscaNota();
+            double nota = 0;
+            try {
+                nota = areaDoAlunoDao.buscaNota(sprintSelecionada);
+                // Exibe a nota no UI
+            } catch (RuntimeException e) {
+                // Aqui você pode capturar a RuntimeException ou a SQLException
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Nota não encontrada");
+                alert.setHeaderText("Nota não encontrada para o grupo do aluno.");
+                alert.setContentText("Verifique os dados e tente novamente mais tarde.");
+                alert.showAndWait();
+            }
             List<AreaDoAluno> alunos = areaDoAlunoDao.listarAlunos();
 
 

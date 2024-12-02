@@ -12,8 +12,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchorlogin" prefHeight="612.0" prefWidth="817.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cyber.cybernexuspacer.controller.LoginController">
+<AnchorPane fx:id="anchorlogin" onMouseClicked="#esqueciPopup" prefHeight="612.0" prefWidth="817.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cyber.cybernexuspacer.controller.LoginController">
     <!-- Label Sistema PACER -->
     <Label fx:id="lblTxtSistemaPacer" contentDisplay="CENTER" layoutX="227.0" layoutY="118.0" prefHeight="70.0" prefWidth="362.0" text="SISTEMA PACER">
         <font>
@@ -66,7 +67,7 @@
          </DropShadow>
       </effect>
     </Button>
-   <TextField fx:id="usuarioLogin" layoutX="242.0" layoutY="296.0" prefHeight="50.0" prefWidth="300.0" promptText="Usuário">
+   <TextField fx:id="usuarioLogin" layoutX="242.0" layoutY="296.0" prefHeight="40.0" prefWidth="300.0" promptText="Usuário">
       <font>
          <Font size="20.0" />
       </font></TextField>
@@ -79,8 +80,16 @@
       </effect>
    </ImageView>
    <Label fx:id="lblUsuarioESenhaInvalidos" layoutX="320.0" layoutY="270.0" textFill="#f2041c" />
-   <PasswordField fx:id="usuarioSenha" layoutX="242.0" layoutY="368.0" prefHeight="50.0" prefWidth="300.0" promptText="Senha">
+   <PasswordField fx:id="usuarioSenha" layoutX="242.0" layoutY="368.0" prefHeight="40.0" prefWidth="300.0" promptText="Senha">
       <font>
          <Font size="20.0" />
       </font></PasswordField>
+   <Text fx:id="esqueciMinhaSenha" fill="#ff6f6f" layoutX="334.0" layoutY="552.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Esqueci minha senha" underline="true">
+      <font>
+         <Font name="Arial" size="12.0" />
+      </font>
+   </Text>
+   <cursor>
+      <Cursor fx:constant="HAND" />
+   </cursor>
 </AnchorPane>
